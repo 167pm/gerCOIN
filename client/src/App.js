@@ -10,7 +10,11 @@ const categories = [
   { name: 'Транспорт', color: '#36A2EB' },
   { name: 'Развлечения', color: '#FFCE56' },
   { name: 'Жилье', color: '#4BC0C0' },
-  { name: 'Другое', color: '#9966FF' },
+  { name: 'Кредит', color: '#9966FF' },
+  { name: 'Курение', color: '#FF5733' },
+  { name: 'BMW X1', color: '#C70039' },
+  { name: 'BMW X3', color: '#900C3F' },
+  { name: 'Обучение', color: '#581845' },
 ];
 
 const App = () => {
@@ -20,6 +24,7 @@ const App = () => {
   const [amount, setAmount] = useState('');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState(categories[0].name);
+  const [editingExpense, setEditingExpense] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -31,7 +36,7 @@ const App = () => {
 
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/expenses', {
+      const response = await axios.get('https://gercoin-server.onrender.com/api/expenses', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses(response.data);
@@ -49,34 +54,63 @@ const App = () => {
     setShowRegister(false);
   };
 
-  const addExpense = async (e) => {
-    e.preventDefault();
-    if (!amount || !title) return;
-
-    const newExpense = { amount: parseFloat(amount), title, category };
-
+  const addExpense = async (expenseData) => {
     try {
-      const response = await axios.post('http://localhost:5001/api/expenses', newExpense, {
+      const response = await axios.post('https://gercoin-server.onrender.com/api/expenses', expenseData, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses([...expenses, response.data]);
-      setAmount('');
-      setTitle('');
-      setCategory(categories[0].name);
     } catch (error) {
       console.error('Ошибка при добавлении данных:', error);
     }
   };
 
+  const editExpense = async (id, updatedExpense) => {
+    try {
+      const response = await axios.put(`https://gercoin-server.onrender.com/api/expenses/${id}`, updatedExpense, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setExpenses(expenses.map((exp) => (exp._id === id ? response.data : exp)));
+      setEditingExpense(null);
+    } catch (error) {
+      console.error('Ошибка при редактировании данных:', error);
+    }
+  };
+
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/expenses/${id}`, {
+      await axios.delete(`https://gercoin-server.onrender.com/api/expenses/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses(expenses.filter((exp) => exp._id !== id));
     } catch (error) {
       console.error('Ошибка при удалении данных:', error);
     }
+  };
+
+  const openEditForm = (expense) => {
+    setEditingExpense(expense);
+    setAmount(expense.amount);
+    setTitle(expense.title);
+    setCategory(expense.category);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!amount || !title) return;
+
+    const expenseData = { amount: parseFloat(amount), title, category };
+
+    if (editingExpense) {
+      await editExpense(editingExpense._id, expenseData);
+    } else {
+      await addExpense(expenseData);
+    }
+
+    setAmount('');
+    setTitle('');
+    setCategory(categories[0].name);
+    setEditingExpense(null);
   };
 
   const getCategoryData = () => {
@@ -108,7 +142,7 @@ const App = () => {
     <div className="app">
       <h1>Учет расходов</h1>
       <div className="container">
-        <form onSubmit={addExpense} className="expense-form">
+        <form onSubmit={handleSubmit} className="expense-form">
           <input
             type="number"
             placeholder="Сумма"
@@ -130,7 +164,14 @@ const App = () => {
               </option>
             ))}
           </select>
-          <button type="submit">Добавить</button>
+          <button type="submit">
+            {editingExpense ? 'Сохранить изменения' : 'Добавить'}
+          </button>
+          {editingExpense && (
+            <button type="button" onClick={() => setEditingExpense(null)}>
+              Отмена
+            </button>
+          )}
         </form>
 
         <div className="expenses-list">
@@ -145,6 +186,7 @@ const App = () => {
                   <span>{exp.amount} ₽</span>
                   <span>{exp.category}</span>
                   <span>{exp.date}</span>
+                  <button onClick={() => openEditForm(exp)}>Редактировать</button>
                   <button onClick={() => deleteExpense(exp._id)}>Удалить</button>
                 </li>
               ))}

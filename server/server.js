@@ -51,6 +51,21 @@ app.post('/api/expenses', async (req, res) => {
   }
 });
 
+app.put('/api/expenses/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { amount, title, category } = req.body;
+    const updatedExpense = await Expense.findByIdAndUpdate(
+      id,
+      { amount, title, category },
+      { new: true }
+    );
+    res.json(updatedExpense);
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка при редактировании данных' });
+  }
+});
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
