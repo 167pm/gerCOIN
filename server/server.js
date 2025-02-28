@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors({
-  origin: 'https://67c229c0bfb53b00081f5285--fabulous-pegasus-feaf7c.netlify.app/', // Замени на домен твоего приложения
+  origin: '*', // Замени на домен твоего приложения
   credentials: true,
 }));
 app.use(express.json());
