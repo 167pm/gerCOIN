@@ -8,7 +8,7 @@ const Register = ({ onRegister }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5001/api/register', { username, password });
+      await axios.post('https://gercoin.onrender.com/api/register', { username, password });
       onRegister();
     } catch (error) {
       console.error('Ошибка при регистрации:', error);
