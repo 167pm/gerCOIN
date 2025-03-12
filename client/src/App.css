@@ -155,11 +155,11 @@ h1 {
 
 .recharts-surface{
   width: 50% !important;
-  height: 100% !important;
+  /* height: 100% !important; */
 }
 
 .recharts-legend-wrapper{
-    /* position: absolute; */
+    position: relative;
     width: 50% !important;
     height: auto !important;
     left: 5px !important;
