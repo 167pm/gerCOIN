@@ -196,22 +196,24 @@ const App = () => {
 
         <div className="analytics">
           <h2>Аналитика</h2>
-          <PieChart width={400} height={300}>
-            <Pie
-              data={getCategoryData()}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              label
-            >
-              {getCategoryData().map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={categories[index].color} />
-              ))}
-            </Pie>
-            <Legend />
-          </PieChart>
+          <div style={{ width: 700, height: 450, overflow: "hidden" }}>
+            <PieChart width={600} height={450}>
+              <Pie
+                data={getCategoryData()}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={120} // Увеличиваем радиус для масштабирования
+                label
+              >
+                {getCategoryData().map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={categories[index].color} />
+                ))}
+              </Pie>
+              <Legend />
+            </PieChart>
+          </div>
           <p className="total-spent">Общие расходы: {totalExpenses} ₽</p>
         </div>
       </div>

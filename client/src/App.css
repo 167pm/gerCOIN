@@ -164,6 +164,7 @@ h1 {
     height: auto !important;
     left: 5px !important;
     align-items: center !important;
+    top: 40px !important;
 }
 
 .total-spent{
