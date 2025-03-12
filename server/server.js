@@ -123,5 +123,5 @@ app.put('/api/expenses/:id', async (req, res) => {
 
 // Запуск сервера
 app.listen(PORT, () => {
-  console.log(`Сервер запущен на http://localhost:${PORT}`);
+  console.log(`Сервер запущен на https://gercoin.onrender.com:${PORT}`);
 });
