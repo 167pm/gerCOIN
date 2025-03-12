@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #0d0d0d;
+  font-family: 'inter';
+  background-color: #212429;
   color: #fff;
   margin: 0;
   padding: 0;
@@ -13,24 +15,34 @@ body {
   text-align: center;
 }
 
+.teaser {
+  font-weight: 600;
+  margin: 0;
+  text-align: start;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
 h1 {
-  color: #4a90e2;
+  color: #afd4ff;
 }
 
 .container {
   display: flex;
-  flex-direction: column;
   gap: 20px;
+  justify-content: center;
 }
 
 .expense-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #181818;
-  padding: 20px;
+  background: #2a2d32;
+  padding: 30px 50px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  justify-content: center;
 }
 
 .expense-form input,
@@ -44,7 +56,7 @@ h1 {
 
 .expense-form button {
   background-color: #afd4ff;
-  color: #181818;
+  color: #2a2d32;
   cursor: pointer;
   border-radius: 20px;
   font-weight: 600;
@@ -55,10 +67,11 @@ h1 {
 }
 
 .expenses-list {
-  background: #181818;
+  background: #2a2d32;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
 .expenses-list ul {
@@ -68,13 +81,60 @@ h1 {
 
 .expenses-list li {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 10px;
+  border: none;
 }
 
-.expenses-list li:last-child {
-  border-bottom: none;
+.expenses-list li:hover {
+  background-color: #3a3d42;
+  border-radius: 10px;
+}
+
+.expense-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expense-details {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spent {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  font-weight: bold;
+}
+
+.spent-name {
+  font-weight: 300;
+  width: 150px;
+}
+
+.spent-button {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .expenses-list button {
@@ -84,7 +144,6 @@ h1 {
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 10px;
   height: 35px;
 }
 
@@ -92,19 +151,8 @@ h1 {
   background-color: #cc0000;
 }
 
-.spent {
-  display: flex;
-  flex-direction: column;
-  width: 120px;
-}
-
-.spent-name {
-  font-weight: bold;
-  width: 150px;
-}
-
 .analytics {
-  background: #181818;
+  background: #2a2d32;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -145,29 +193,76 @@ h1 {
   background-color: #357abd;
 }
 
-.recharts-wrapper{
-      /* position: relative; */
-      cursor: default !important;
-      width: 100% !important;
-      height: 100% !important;
-      display: flex !important;
+.recharts-wrapper {
+  cursor: default !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
 }
 
-.recharts-surface{
+.recharts-surface {
   width: 50% !important;
-  /* height: 100% !important; */
 }
 
-.recharts-legend-wrapper{
-    position: relative !important; 
-    width: 50% !important;
-    height: auto !important;
-    left: 5px !important;
-    align-items: center !important;
-    top: 40px !important;
+.recharts-legend-wrapper {
+  position: relative !important;
+  width: 50% !important;
+  height: auto !important;
+  left: 5px !important;
+  align-items: center !important;
+  top: 40px !important;
 }
 
-.total-spent{
+.total-spent {
   font-size: 20px !important;
   font-weight: bold !important;
+}
+
+@media screen and (max-width: 450px) {
+  .spent-name {
+    width: 100%;
+  }
+  .spent {
+    margin: 5px;
+  }
+  .expenses-list li {
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 20px;
+    margin: 20px;
+    color: #0d0d0d;
+  }
+  .spent-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .expenses-list button {
+    margin-left: 0;
+    margin: 5px;
+  }
+  .recharts-wrapper {
+    position: fixed;
+    width: 400px !important;
+    flex-direction: row-reverse !important;
+  }
+  .huynya {
+    width: 400px !important;
+  }
+  .analytics {
+    padding: 0;
+  }
+  .recharts-default-legend {
+    flex-direction: column;
+    display: flex;
+    align-items: start;
+  }
+  .recharts-legend-item {
+    display: flex !important;
+    width: 200px;
+  }
+  .recharts-symbols {
+    width: 20px !important;
+  }
 }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { PieChart, Pie, Cell, Legend } from 'recharts';
 import Login from './Login';
 import Register from './Register';
+import DonutChart from './DonutChart';
 import './App.css';
 
 const categories = [
@@ -25,6 +25,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState(categories[0].name);
   const [editingExpense, setEditingExpense] = useState(null);
+  const [openExpenseId, setOpenExpenseId] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -95,6 +96,10 @@ const App = () => {
     setCategory(expense.category);
   };
 
+  const toggleExpense = (id) => {
+    setOpenExpenseId(openExpenseId === id ? null : id);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!amount || !title) return;
@@ -114,10 +119,17 @@ const App = () => {
   };
 
   const getCategoryData = () => {
-    const data = categories.map((cat) => ({
-      name: cat.name,
-      value: expenses.filter((exp) => exp.category === cat.name).reduce((sum, exp) => sum + exp.amount, 0),
-    }));
+    const data = categories.map((cat) => {
+      const totalForCategory = expenses
+        .filter((exp) => exp.category === cat.name)
+        .reduce((sum, exp) => sum + exp.amount, 0);
+
+      return {
+        name: cat.name,
+        value: totalForCategory,
+      };
+    });
+
     return data;
   };
 
@@ -143,6 +155,7 @@ const App = () => {
       <h1>Учет расходов</h1>
       <div className="container">
         <form onSubmit={handleSubmit} className="expense-form">
+          <p className="teaser">Добавить трату</p>
           <input
             type="number"
             placeholder="Сумма"
@@ -175,19 +188,27 @@ const App = () => {
         </form>
 
         <div className="expenses-list">
-          <h2>Последние траты</h2>
+          <h2 className="teaser">Последние траты</h2>
           {expenses.length === 0 ? (
             <p>Трат пока нет.</p>
           ) : (
             <ul>
               {expenses.map((exp) => (
-                <li key={exp._id}>
-                  <span className="spent-name">{exp.title}</span>
-                  <span className="spent">{exp.amount} ₽</span>
-                  <span className="spent">{exp.category}</span>
-                  <span className="spent">{exp.date}</span>
-                  <button onClick={() => openEditForm(exp)}>Редактировать</button>
-                  <button onClick={() => deleteExpense(exp._id)}>Удалить</button>
+                <li key={exp._id} onClick={() => toggleExpense(exp._id)}>
+                  <div className="expense-summary">
+                    <span className="spent-name">{exp.title}</span>
+                    <span className="spent">{exp.amount} ₽</span>
+                  </div>
+                  {openExpenseId === exp._id && (
+                    <div className="expense-details">
+                      <span className="spent">{exp.category}</span>
+                      <span className="spent">{exp.date}</span>
+                      <div className="spent-button">
+                        <button onClick={(e) => { e.stopPropagation(); openEditForm(exp); }}>Редактировать</button>
+                        <button onClick={(e) => { e.stopPropagation(); deleteExpense(exp._id); }}>Удалить</button>
+                      </div>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
@@ -195,24 +216,16 @@ const App = () => {
         </div>
 
         <div className="analytics">
-          <h2>Аналитика</h2>
-          <div style={{ width: 700, height: 450, overflow: "hidden" }}>
-            <PieChart width={600} height={450}>
-              <Pie
-                data={getCategoryData()}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={120} // Увеличиваем радиус для масштабирования
-                label
-              >
-                {getCategoryData().map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={categories[index].color} />
-                ))}
-              </Pie>
-              <Legend />
-            </PieChart>
+          <h2 className="teaser">Аналитика</h2>
+          <div className="huynya" style={{ width: 700, height: 450, overflow: 'hidden' }}>
+            <DonutChart
+              data={getCategoryData()}
+              colors={categories.map((cat) => cat.color)}
+              width={600}
+              height={450}
+              innerRadius={80} // Радиус дырки
+              outerRadius={120} // Внешний радиус
+            />
           </div>
           <p className="total-spent">Общие расходы: {totalExpenses} ₽</p>
         </div>
