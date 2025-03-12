@@ -36,7 +36,7 @@ const App = () => {
 
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get('https://gercoin.onrender.com/api/data', {
+      const response = await axios.get('https://gercoin.onrender.com/api/expenses', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses(response.data);
@@ -56,7 +56,7 @@ const App = () => {
 
   const addExpense = async (expenseData) => {
     try {
-      const response = await axios.post('https://gercoin.onrender.com/api/data', expenseData, {
+      const response = await axios.post('https://gercoin.onrender.com/api/expenses', expenseData, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses([...expenses, response.data]);
@@ -67,7 +67,7 @@ const App = () => {
 
   const editExpense = async (id, updatedExpense) => {
     try {
-      const response = await axios.put(`https://gercoin.onrender.com/api/data`, updatedExpense, {
+      const response = await axios.put(`https://gercoin.onrender.com/api/expenses/${id}`, updatedExpense, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses(expenses.map((exp) => (exp._id === id ? response.data : exp)));
@@ -79,7 +79,7 @@ const App = () => {
 
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`https://gercoin.onrender.com/api/data`, {
+      await axios.delete(`https://gercoin.onrender.com/api/expenses/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setExpenses(expenses.filter((exp) => exp._id !== id));
