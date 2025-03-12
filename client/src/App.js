@@ -182,10 +182,10 @@ const App = () => {
             <ul>
               {expenses.map((exp) => (
                 <li key={exp._id}>
-                  <span>{exp.title}</span>
-                  <span>{exp.amount} ₽</span>
-                  <span>{exp.category}</span>
-                  <span>{exp.date}</span>
+                  <span className="spent-name">{exp.title}</span>
+                  <span className="spent">{exp.amount} ₽</span>
+                  <span className="spent">{exp.category}</span>
+                  <span className="spent">{exp.date}</span>
                   <button onClick={() => openEditForm(exp)}>Редактировать</button>
                   <button onClick={() => deleteExpense(exp._id)}>Удалить</button>
                 </li>
@@ -212,7 +212,7 @@ const App = () => {
             </Pie>
             <Legend />
           </PieChart>
-          <p>Общие расходы: {totalExpenses} ₽</p>
+          <p className="total-spent">Общие расходы: {totalExpenses} ₽</p>
         </div>
       </div>
     </div>
